@@ -5,9 +5,8 @@ import (
   "os"
   "io"
   "strings"
+  "flag"
 )
-
-var errorNoArgumentProvided = fmt.Errorf("Need to have at least 1 argument to run this program!")
 
 // TODO: 0 - run program successfully!
 // TODO: 1 - get argument from program!
@@ -15,6 +14,12 @@ var errorNoArgumentProvided = fmt.Errorf("Need to have at least 1 argument to ru
 // TODO: 3 - show last 10 character only!
 // TODO: 4 - parameterize character count!
 // TODO: 5 - follow stream if file is continuously writing!
+
+var errorNoArgumentProvided = fmt.Errorf("Need to have at least 1 argument to run this program!")
+var numOfChars int
+func init() {
+  flag.IntVar(&numOfChars, "n", 10, "number of chars to be parsed (default: 10)")
+}
 
 // a way to learn golang by implementing `tail`
 // general idea:
@@ -24,9 +29,11 @@ var errorNoArgumentProvided = fmt.Errorf("Need to have at least 1 argument to ru
 //    b. else, return only from cursor number to end of file
 // TODO: 0 - run program successfully!
 func main() {
+  // TODO: 4 - parameterize character count!
+  flag.Parse()
   fmt.Printf("%s is running!\n", os.Args[0])
   // TODO: 1 - get argument from program!
-  argsWithoutProg := os.Args[1:]
+  argsWithoutProg := flag.Args()
 
   if len(argsWithoutProg) < 1 {
     checkAndExitIfError(errorNoArgumentProvided)
@@ -45,7 +52,7 @@ func main() {
 
   // TODO: 3 - show last 10 character only!
   // cursor for navigating characters
-  var cursor int64 = -10
+  var cursor int64 = -1 * int64(numOfChars)
   // endless loop until all char is read
   for {
     cursor += 1
