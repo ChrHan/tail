@@ -4,6 +4,7 @@ import (
   "fmt"
   "os"
   "io"
+  "strings"
 )
 
 var errorNoArgumentProvided = fmt.Errorf("Need to have at least 1 argument to run this program!")
@@ -42,8 +43,6 @@ func main() {
   fmt.Printf("Name: %s \n", fileStat.Name())
   fmt.Printf("File Size: %d \n", fileSize)
 
-  lineBuffer := ""
-
   // TODO: 3 - show last 10 character only!
   // cursor for navigating characters
   var cursor int64 = -10
@@ -58,22 +57,15 @@ func main() {
     _, err := file.Read(currentChar)
     checkAndExitIfError(err)
 
-    fmt.Print(string(currentChar))
-    // if cursor != -1 && (currentChar[0] == 10 || currentChar[0] == 13) {
-    //   // when newline is found
-    //   lineBuffer = fmt.Sprintf("%s\n", lineBuffer)
-    // }
-
-    // lineBuffer = lineBuffer + fmt.Sprintf("%s%s", string(currentChar), lineBuffer)
+    // printing every char found, not ideal - might be more efficient to stream it using other method 
+    _, err = io.Copy(os.Stdout, strings.NewReader(string(currentChar)))
+    checkAndExitIfError(err)
 
     if cursor == -1 {
       // stop if we reach the end of file!
       break
     }
-
-//    cursor = cursor + 1
   }
-  fmt.Println(lineBuffer)
 }
 
 func checkAndExitIfError(err error) {
